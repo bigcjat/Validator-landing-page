@@ -39,6 +39,7 @@ Updating TOML File:
 Add the following lines to the bottom of your existing TOML file at .well-known/:
 
 [[STATUS]]
+
 [[AMENDMENTS]]
 
 Starting the Script:
