@@ -1,3 +1,5 @@
+Example here: https://validator.report/landing/
+
 Setup Instructions - Validator and Web Host Configuration
 
 
