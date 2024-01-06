@@ -4,7 +4,6 @@ Setup Instructions - Validator and Web Host Configuration
 
 
 
-
 Part 1: Validator Server Setup
 
 Prerequisites:
