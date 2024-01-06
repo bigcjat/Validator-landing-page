@@ -30,6 +30,7 @@ Part 2: Web Host Setup
 
 Editing toml.php:
 Change the following lines:
+$allowedIPAddress = '0.0.0.0': Replace with your validator IP address
 $apiKey = 'key': Set your API key (must match the one in update.py)
 $filePath = '.well-known/xahau.toml': Change the file path as needed (xrp-ledger.toml for Mainnet)
 Set file permissions to 644
