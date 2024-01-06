@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Validator Landing Page</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/css/flag-icon.min.css">
+  <link rel="stylesheet" href="./style.css">
+
+</head>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e4e4e4;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .report-container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .header {
+    background-color: #ffd700;
+    padding: 10px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 24px;
+    color: #000000;
+  }
+
+  h2 {
+    color: #000000;
+  }
+
+  .node-details,
+  .system-load {
+    margin-top: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  th,
+  td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    background-color: #f9f9f9;
+  }
+
+  .bar-container {
+    margin-bottom: 20px;
+  }
+
+  .bar {
+    height: 20px;
+    background-color: #ffd700;
+    width: 0;
+    margin-top: 5px;
+  }
+
+  .footer {
+    font-size: 0.8em;
+    text-align: center;
+    margin-top: 20px;
+    color: #777777;
+  }
+
+  table tr td {
+    width: 20%;
+  }
+
+  table tr td:nth-child(2) {
+    width: 80%;
+    max-width: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .center-content {
+    display: flex;
+    align-items: center;
+  }
+
+  .footerValue {
+    color: orange;
+  }
+
+  img {
+    height: 20px;
+    width: 20px;
+  }
+</style>
+
+<script>
+  const networkIdMapping = {
+    0: "Mainnet",
+    1: "Testnet",
+    2: "Devnet",
+    25: "AMM Devnet",
+    2551: "Sidechains Devnet Locking Chain",
+    2552: "Sidechains Devnet Issuing Chain",
+    21338: "Hooks V3 Testnet",
+    21337: "Xahau Mainnet"
+  };
+
+  function convertXrplTimeToUTC(xrplTimestamp) {
+    const xrplEpoch = new Date('2000-01-01T00:00:00Z');
+    const utcDate = new Date(xrplEpoch.getTime() + xrplTimestamp * 1000);
+    return utcDate.toUTCString();
+  }
+
+  function cleanURL(url) {
+    var cleanedURL = url.replace(/^https?:\/\//, "");
+    cleanedURL = cleanedURL.replace(/\/$/, "");
+
+    return cleanedURL;
+  }
+
+  function convertMicrosToHoursAndMinutes(microseconds) {
+    var totalSeconds = Math.floor(microseconds / 1000000);
+    var hours = Math.floor(totalSeconds / 3600);
+    var remainingSeconds = totalSeconds % 3600;
+    var minutes = Math.floor(remainingSeconds / 60);
+    return hours + " hours, " + minutes + " minutes";
+  }
+
+  async function fetchAndParseTOML(url) {
+    const response = await fetch(url);
+    const tomlText = await response.text();
+    const json = parseTOML(tomlText);
+    return json;
+  }
+
+  function parseTOML(tomlString) {
+    const json = {};
+    let currentSection = json;
+
+    tomlString.split("\n").forEach((line) => {
+      line = line.split("#")[0].trim();
+      if (!line) return;
+
+      if (line.startsWith("[")) {
+        const section = line.replace(/[\[\]]/g, "");
+        json[section] = {};
+        currentSection = json[section];
+      } else {
+        const [key, value] = line.split("=").map((s) => s.trim());
+        currentSection[key] = parseValue(value);
+      }
+    });
+
+    return json;
+  }
+
+  function parseValue(value) {
+    if (value.startsWith('"') && value.endsWith('"')) {
+      return value.slice(1, -1);
+    }
+    if (value === "true" || value === "false") {
+      return value === "true";
+    }
+    if (!isNaN(value)) {
+      return parseFloat(value);
+    }
+    return value;
+  }
+
+  function updateContent(jsonData) {
+    console.log(jsonData);
+
+    if (jsonData.STATUS.NETWORK === "21337") {
+      var networkIMG = `<img 
+src="https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=10,fit=contain,format=auto/https%3A%2F%2F1677921557-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252Fm6f29os4wP16vCS4lHNh%252Ficon%252FeZDp8sEXSQQTJfGGITkj%252Fxahau-icon-yellow.png%3Falt%3Dmedia%26token%3Db911e9ea-ee58-409c-939c-c28c293c9adb">&nbsp;`;
+    } else {
+      var networkIMG = `<img src="https://xrpl.org/assets/img/xrp-x-logo.png">&nbsp;`;
+    }
+
+    if (jsonData.VALIDATORS.network_country) { var flag = `<span class="flag-icon 
+flag-icon-${jsonData.VALIDATORS.network_country.toLowerCase()}"></span>` } else { var flag = "" }
+    document.getElementById("domain").textContent = cleanURL(jsonData.ORGANIZATION.website);
+    document.getElementById("masterKey").textContent = jsonData.VALIDATORS.public_key;
+    document.getElementById("asn").innerHTML = `${flag} ${jsonData.VALIDATORS.network_asn} 
+${jsonData.VALIDATORS.network_as}`;
+    document.getElementById("version").textContent = jsonData.STATUS.BUILDVERSION;
+    document.getElementById("totalLedgers").textContent = jsonData.STATUS.LEDGERS;
+    document.getElementById("timeOnline").textContent = document.getElementById("timeOnline").textContent = 
+convertMicrosToHoursAndMinutes(parseInt(jsonData.STATUS.STATUSTIME));
+    document.getElementById("currentStatus").textContent = jsonData.STATUS.STATUS;
+    document.getElementById("unlStatus").textContent = jsonData.STATUS.UNL === "active" ? "Trusted" : "Untrusted";
+    const networkId = jsonData.STATUS.NETWORK;
+    const networkName = networkIdMapping[networkId] || 'Unknown Network';
+    document.getElementById('network').innerHTML = `${networkIMG} ${networkName}`;
+    document.getElementById("cpuBar").textContent = jsonData.STATUS.CPU;
+    document.getElementById("ramBar").textContent = jsonData.STATUS.RAM;
+    document.getElementById("ssdBar").textContent = jsonData.STATUS.DISK;
+    document.getElementById("cpuBar").style.width = jsonData.STATUS.CPU;
+    document.getElementById("ramBar").style.width = jsonData.STATUS.RAM;
+    document.getElementById("ssdBar").style.width = jsonData.STATUS.DISK;
+    document.getElementById("footer").innerHTML = `Snapshot taken on key ledger: <span 
+class="footerValue">${jsonData.STATUS.KEY}</span> At: <span 
+class="footerValue">${convertXrplTimeToUTC(jsonData.STATUS.TIME)}</span>`;
+  }
+
+  function displayAmendments(amendments) {
+    var tableBody = document.getElementById("amendmentTableBody");
+    tableBody.innerHTML = "";
+    for (var amendName in amendments) {
+      if (amendments.hasOwnProperty(amendName)) {
+        var amendID = amendments[amendName];
+        var row = `<tr>
+                <td>${amendName}</td>
+                <td>${amendID}</td>
+            </tr>`;
+        tableBody.innerHTML += row;
+      }
+    }
+  }
+
+  function updateOrganizationAndPrincipalDetails(jsonData) {
+    if (jsonData.ORGANIZATION) {
+      document.querySelector('.orgPrin tbody').innerHTML +=
+        `<tr>
+                <td>Organization:</td>
+                <td>${jsonData.ORGANIZATION.name || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Twitter:</td>
+                <td>${jsonData.ORGANIZATION.twitter || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>${jsonData.ORGANIZATION.email || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>${jsonData.ORGANIZATION.country || 'Not Available'}</td>
+            </tr>
+            <tr><td></td><td></td></tr>`;
+    }
+
+    if (jsonData.PRINCIPALS) {
+      document.querySelector('.orgPrin tbody').innerHTML +=
+        `<tr>
+                <td>Principal:</td>
+                <td>${jsonData.PRINCIPALS.name || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Twitter:</td>
+                <td>${jsonData.PRINCIPALS.twitter || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>${jsonData.PRINCIPALS.email || 'Not Available'}</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>${jsonData.PRINCIPALS.country || 'Not Available'}</td>
+            </tr>
+            <tr><td></td><td></td></tr>`;
+    }
+  }
+//Change the URL to your validator's TOML file
+  fetchAndParseTOML(".well-known/xahau.toml")
+    .then((json) => {
+      updateContent(json);
+      displayAmendments(json.AMENDMENTS);
+      updateOrganizationAndPrincipalDetails(json)
+    })
+    .catch((error) => console.error("Error fetching or parsing TOML:", error));
+</script>
+
+<body>
+
+
+  <div class="report-container">
+    <div class="header" id="header">
+      Validator Report: <span id="domain">Loading...</span>
+    </div>
+    <div class="node-details">
+      <h2>Node details</h2>
+      <table>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+        <tr>
+          <td>Validator Node Key:</td>
+          <td id="masterKey">Loading...</td>
+        </tr>
+        <tr>
+          <td>Version:</td>
+          <td id="version">Loading...</td>
+        </tr>
+        <tr>
+          <td>Total Ledgers:</td>
+          <td id="totalLedgers">Loading...</td>
+        </tr>
+
+        <tr>
+          <td>Current Status:</td>
+          <td id="currentStatus">Loading...</td>
+        </tr>
+
+        <tr>
+          <td>Time in Status:</td>
+          <td id="timeOnline">Loading...</td>
+        </tr>
+
+        <tr>
+          <td>UNL Status:</td>
+          <td id="unlStatus">Loading...</td>
+        </tr>
+        <tr>
+          <td>Network:</td>
+          <td id="network2">
+            <div id="network" class="center-content"></div>
+        <tr>
+          <td>ASN:</td>
+          <td id="asn">Loading...</td>
+        </tr>
+
+        </td>
+        </tr>
+      </table>
+    </div>
+    <div class="system-load">
+      <h2>System Load</h2>
+      <table>
+        <tr>
+          <th>Resource</th>
+          <th>Used</th>
+        </tr>
+        <tr>
+          <td>CPU:</td>
+          <td id="divBar">
+            <div class="bar" id="cpuBar" style="width: 100%;">100%</div>
+          </td>
+        </tr>
+        <tr>
+          <td>RAM:</td>
+          <td id="divBar">
+            <div class="bar" id="ramBar" style="width: 100%;">100%</div>
+          </td>
+        </tr>
+        <tr>
+          <td>SSD:</td>
+          <td id="divBar">
+            <div class="bar" id="ssdBar" style="width: 100%;">100%</div>
+          </td>
+        </tr>
+      </table>
+      <div class="bar-container">
+
+      </div>
+    </div>
+
+    <div class="amendments">
+      <h2>Voting Yay</h2>
+      <table>
+        <tr>
+          <th>Amendment</th>
+          <th>ID</th>
+        </tr>
+        <tbody id="amendmentTableBody">
+
+        </tbody>
+      </table>
+    </div>
+
+    <div class="orgPrin">
+      <h2>Organization and Principal</h2>
+      <table>
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+
+      </table>
+    </div>
+
+    <div class="footer" id="footer">Snapshot taken on ledger: Loading... At: Loading...</div>
+  </div>
+
+</body>
+
+</html>
