@@ -8,7 +8,11 @@ Part 1: Validator Server Setup
 
 Prerequisites:
 Python3, mpstat, free, df, awk
+Python3 requires:
+json, websockets, subprocess, asyncio, requests
 Optional text editor: nano
+Webhost requires:
+PHP
 
 Upload Pre-existing Files: Upload update.py and listener.py to the validator server or use nano to create these files and paste the contents accordingly
 
