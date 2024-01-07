@@ -1,4 +1,15 @@
+Use your validator to send information to your webhost to update your toml file, then create a landing page based on the data found in your toml file.
+
+No connection (no holes) to your validator, update every key ledger (or whenever you want)
+
+Be more transparent. Display your validator info, load, amendments, organization and principle. Hands free.
+
+Works on xrpl mainnet, xahau, testnet
+
 Example here: https://validator.report/landing/
+
+
+
 
 Setup Instructions - Validator and Web Host Configuration
 
