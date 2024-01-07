@@ -115,6 +115,11 @@
     21337: "Xahau Mainnet"
   };
 
+  function revealEmail(email, emailSpan) {
+  var emailPlaceholder = document.getElementById(emailSpan);
+  emailPlaceholder.textContent = email;
+}
+  
   function convertXrplTimeToUTC(xrplTimestamp) {
     const xrplEpoch = new Date('2000-01-01T00:00:00Z');
     const utcDate = new Date(xrplEpoch.getTime() + xrplTimestamp * 1000);
@@ -228,49 +233,60 @@ class="footerValue">${convertXrplTimeToUTC(jsonData.STATUS.TIME)}</span>`;
     }
   }
 
-  function updateOrganizationAndPrincipalDetails(jsonData) {
-    if (jsonData.ORGANIZATION) {
-      document.querySelector('.orgPrin tbody').innerHTML +=
-        `<tr>
+function updateOrganizationAndPrincipalDetails(jsonData) {
+  if (jsonData.ORGANIZATION) {
+    document.querySelector(".orgPrin tbody").innerHTML += `<tr>
                 <td>Organization:</td>
-                <td>${jsonData.ORGANIZATION.name || 'Not Available'}</td>
+                <td>${jsonData.ORGANIZATION.name || "Not Available"}</td>
             </tr>
             <tr>
                 <td>Twitter:</td>
-                <td>${jsonData.ORGANIZATION.twitter || 'Not Available'}</td>
+                <td>${jsonData.ORGANIZATION.twitter || "Not Available"}</td>
             </tr>
             <tr>
                 <td>Email:</td>
-                <td>${jsonData.ORGANIZATION.email || 'Not Available'}</td>
+                
+                
+                
+                
+                <td>${
+                  jsonData.ORGANIZATION && jsonData.ORGANIZATION.email
+                    ? `<span id="emailORG" onclick="revealEmail('${jsonData.ORGANIZATION.email}', 'emailORG')" style="cursor: pointer; text-decoration: underline;">Click to reveal address</span>`
+                    : "Not Available"
+                }
+</td>
             </tr>
             <tr>
                 <td>Country:</td>
-                <td>${jsonData.ORGANIZATION.country || 'Not Available'}</td>
+                <td>${jsonData.ORGANIZATION.country || "Not Available"}</td>
             </tr>
             <tr><td></td><td></td></tr>`;
-    }
-
-    if (jsonData.PRINCIPALS) {
-      document.querySelector('.orgPrin tbody').innerHTML +=
-        `<tr>
-                <td>Principal:</td>
-                <td>${jsonData.PRINCIPALS.name || 'Not Available'}</td>
-            </tr>
-            <tr>
-                <td>Twitter:</td>
-                <td>${jsonData.PRINCIPALS.twitter || 'Not Available'}</td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-                <td>${jsonData.PRINCIPALS.email || 'Not Available'}</td>
-            </tr>
-            <tr>
-                <td>Country:</td>
-                <td>${jsonData.PRINCIPALS.country || 'Not Available'}</td>
-            </tr>
-            <tr><td></td><td></td></tr>`;
-    }
   }
+
+  if (jsonData.PRINCIPALS) {
+    document.querySelector(".orgPrin tbody").innerHTML += `<tr>
+                <td>Principal:</td>
+                <td>${jsonData.PRINCIPALS.name || "Not Available"}</td>
+            </tr>
+            <tr>
+                <td>Twitter:</td>
+                <td>${jsonData.PRINCIPALS.twitter || "Not Available"}</td>
+            </tr>
+            <tr>
+                <td>Email:</td>
+                <td>${
+                  jsonData.PRINCIPALS && jsonData.PRINCIPALS.email
+                    ? `<span id="emailPRI" onclick="revealEmail('${jsonData.PRINCIPALS.email}', 'emailPRI')" style="cursor: pointer; text-decoration: underline;">Click to reveal address</span>`
+                    : "Not Available"
+                }</td>
+            </tr>
+            <tr>
+                <td>Country:</td>
+                <td>${jsonData.PRINCIPALS.country || "Not Available"}</td>
+            </tr>
+            <tr><td></td><td></td></tr>`;
+  }
+}
 //Change the URL to your validator's TOML file
   fetchAndParseTOML(".well-known/xahau.toml")
     .then((json) => {
