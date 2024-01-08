@@ -6,7 +6,7 @@ Be more transparent. Display your validator info, load, amendments, organization
 
 Works on xrpl mainnet, xahau, testnet
 
-Example here: https://validator.report/landing/
+Example here: [https://validator.report/landing/](https://xahau.validator.report/)
 
 
 
