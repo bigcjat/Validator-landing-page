@@ -25,7 +25,8 @@ def get_xrpl_server_info(key, time):
         status_time = server_info_data['result']['info']['server_state_duration_us']
         unl = server_info_data['result']['info']['validator_list']['status']
         ledgers = server_info_data['result']['info']['complete_ledgers']
-        network = server_info_data['result']['info']['network_id']
+        # Mainnet doesn't provide a network id, so default 0
+        network = server_info_data['result']['info'].get('network_id', 0)
         cpu_usage = run_command("mpstat 1 1 | awk '/Average:/ {print 100 - $12\"%\"}'")
         ram_usage = run_command("free | awk '/Mem:/ {printf(\"%.2f%\"), $3/$2 * 100}'")
         disk_usage = run_command("df -h . | awk 'NR==2{print $5}'")
