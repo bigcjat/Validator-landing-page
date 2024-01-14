@@ -202,7 +202,7 @@ ${jsonData.VALIDATORS.network_as}`;
     document.getElementById("timeOnline").textContent = document.getElementById("timeOnline").textContent = 
 convertMicrosToHoursAndMinutes(parseInt(jsonData.STATUS.STATUSTIME));
     document.getElementById("currentStatus").textContent = jsonData.STATUS.STATUS;
-    document.getElementById("unlStatus").textContent = jsonData.STATUS.UNL === "active" ? "Trusted" : "Untrusted";
+    document.getElementById("nodeSize").textContent = jsonData.STATUS.NODESIZE
     const networkId = jsonData.STATUS.NETWORK;
     const networkName = networkIdMapping[networkId] || 'Unknown Network';
     document.getElementById('network').innerHTML = `${networkIMG} ${networkName}`;
@@ -334,8 +334,8 @@ function updateOrganizationAndPrincipalDetails(jsonData) {
         </tr>
 
         <tr>
-          <td>UNL Status:</td>
-          <td id="unlStatus">Loading...</td>
+          <td>Node Size:</td>
+          <td id="nodeSize">Loading...</td>
         </tr>
         <tr>
           <td>Network:</td>
