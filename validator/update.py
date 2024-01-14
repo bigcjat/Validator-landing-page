@@ -23,7 +23,7 @@ def get_xrpl_server_info(key, time):
         status = server_info_data['result']['info']['server_state']
         version = server_info_data['result']['info']['build_version']
         status_time = server_info_data['result']['info']['server_state_duration_us']
-        unl = server_info_data['result']['info']['validator_list']['status']
+        node_size = server_info_data['result']['info']['node_size']
         ledgers = server_info_data['result']['info']['complete_ledgers']
         # Mainnet doesn't provide a network id, so default 0
         network = server_info_data['result']['info'].get('network_id', 0)
@@ -47,7 +47,7 @@ DISK = "{disk_usage}"
 STATUS = "{status}"
 STATUSTIME = "{status_time}"
 BUILDVERSION = "{version}"
-UNL = "{unl}"
+NODESIZE = "{node_size}"
 LEDGERS = "{ledgers}"
 NETWORK = "{network}"
 KEY = "{key}"
