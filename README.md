@@ -8,7 +8,7 @@ Works on xrpl mainnet, xahau, testnet
 
 Xahau example here: https://xahau.validator.report/
 
-Mainnet example here: https://mainnet.validator.report/
+Mainnet example here: https://mainnet.validator.report/ and here: https://mainnet2.validator.report/
 
 
 Setup Instructions - Validator and Web Host Configuration
