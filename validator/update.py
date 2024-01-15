@@ -30,6 +30,7 @@ def get_xrpl_server_info(key, time):
         cpu_usage = run_command("mpstat 1 1 | awk '/Average:/ {print 100 - $12\"%\"}'")
         ram_usage = run_command("free | awk '/Mem:/ {printf(\"%.2f%\"), $3/$2 * 100}'")
         disk_usage = run_command("df -h . | awk 'NR==2{print $5}'")
+        swap_usage = run_command("free | awk '/Swap:/ {printf(\"%.2f%\"), $3/$2 * 100}'")
 
         feature_result = subprocess.run([xrpl, "feature"], capture_output=True, text=True)
         feature_data = json.loads(feature_result.stdout)
@@ -44,6 +45,7 @@ def get_xrpl_server_info(key, time):
 CPU = "{cpu_usage}"
 RAM = "{ram_usage}"
 DISK = "{disk_usage}"
+SWAP = "{swap_usage}"
 STATUS = "{status}"
 STATUSTIME = "{status_time}"
 BUILDVERSION = "{version}"
