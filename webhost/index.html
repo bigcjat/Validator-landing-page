@@ -209,9 +209,11 @@ convertMicrosToHoursAndMinutes(parseInt(jsonData.STATUS.STATUSTIME));
     document.getElementById("cpuBar").textContent = jsonData.STATUS.CPU;
     document.getElementById("ramBar").textContent = jsonData.STATUS.RAM;
     document.getElementById("ssdBar").textContent = jsonData.STATUS.DISK;
+    document.getElementById("swapBar").textContent = jsonData.STATUS.SWAP;
     document.getElementById("cpuBar").style.width = jsonData.STATUS.CPU;
     document.getElementById("ramBar").style.width = jsonData.STATUS.RAM;
     document.getElementById("ssdBar").style.width = jsonData.STATUS.DISK;
+    document.getElementById("swapBar").style.width = jsonData.STATUS.SWAP;
     document.getElementById("footer").innerHTML = `Snapshot taken on flag ledger: <span 
 class="footerValue">${jsonData.STATUS.KEY}</span> At: <span 
 class="footerValue">${convertXrplTimeToUTC(jsonData.STATUS.TIME)}</span>`;
@@ -373,6 +375,12 @@ function updateOrganizationAndPrincipalDetails(jsonData) {
           <td>SSD:</td>
           <td id="divBar">
             <div class="bar" id="ssdBar" style="width: 100%;">100%</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Swap:</td>
+          <td id="divBar">
+            <div class="bar" id="swapBar" style="width: 100%;">100%</div>
           </td>
         </tr>
       </table>
