@@ -184,7 +184,7 @@
   function updateContent(jsonData) {
     console.log(jsonData);
 
-    if (jsonData.STATUS.NETWORK === "21337") {
+    if (typeof jsonData.STATUS === 'object' && jsonData.STATUS.NETWORK === "21337") {
       var networkIMG = `<img 
 src="https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=10,fit=contain,format=auto/https%3A%2F%2F1677921557-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252Fm6f29os4wP16vCS4lHNh%252Ficon%252FeZDp8sEXSQQTJfGGITkj%252Fxahau-icon-yellow.png%3Falt%3Dmedia%26token%3Db911e9ea-ee58-409c-939c-c28c293c9adb">&nbsp;`;
     } else {
