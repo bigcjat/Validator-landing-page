@@ -12,7 +12,7 @@ $filePath = '.well-known/xahau.toml'; // File path relitive to this PHP script. 
 $clientIPAddress = $_SERVER['REMOTE_ADDR'];
 
 // Check if the client's IP address matches the allowed IP address
-if ($clientIPAddress !== $allowedIPAddress) {
+if ($allowedIPAddress !== '0.0.0.0' || $clientIPAddress !== $allowedIPAddress) {
     // If not, exit the script with an unauthorized error message
     http_response_code(401); // Set HTTP response code to 401 Unauthorized
     die('Error: Unauthorized access');
