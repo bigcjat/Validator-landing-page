@@ -6,9 +6,9 @@ Be more transparent. Display your validator info, load, amendments, organization
 
 Works on xrpl mainnet, xahau, testnet
 
-Xahau example here: https://xahau.validator.report/
 
-Mainnet example here: https://mainnet.validator.report/ and here: https://mainnet2.validator.report/
+
+Mainnet example here: https://validator.node.lease/
 
 
 Setup Instructions - Validator and Web Host Configuration
